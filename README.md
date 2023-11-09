@@ -14,9 +14,9 @@
 - zamien w tym poleceniu wartosci XXXXX, YYYYY, ZZZZZ na swoje: tzn. nazwe uzytkownika, haslo i adres e-mail
 
 ## Testowanie logowania
-
-
-
+- `curl -X POST http://localhost:8080/api/auth/signin -H 'Content-Type: application/json' -d '{"username":"ola","password":"123456"}'`
+- tu zwraca token
+- do kazdego zkolejnego zadania trzeba dodac do headera: `Authorization: Bearer TOKEN`
 
 ## Przykładowe dane do logowania
 
