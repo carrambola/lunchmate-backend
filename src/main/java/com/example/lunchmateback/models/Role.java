@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +23,7 @@ public class Role {
   private Integer id;
 
   @Enumerated(EnumType.STRING)
-  @Column(length = 20)
+  @Column(length = 20, unique = true)
   private ERole name;
 
   public Role() {
