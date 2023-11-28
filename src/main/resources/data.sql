@@ -8,3 +8,5 @@ insert into users (id, email, password, username, birth_date, name, surname) val
 insert into user_roles (user_id, role_id) values (
     1, 1
 ) on conflict do nothing;
+
+insert into category (id, name) values (1, 'Śniadania') on conflict do nothing;

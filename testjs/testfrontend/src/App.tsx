@@ -22,8 +22,9 @@ function App() {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
 
+  const [recipes, setRecipes] = useState([])
+
   function logowanie(signInForm : SignInForm ) {
-    // const data = {"username": "ola", "password": "123456"};
     fetch('http://localhost:8080/api/auth/signin', {
         method: "POST", 
         body: JSON.stringify(signInForm),
@@ -57,6 +58,43 @@ function App() {
       console.log(err);
     })
   }
+
+  const recipe = {"name": "Przepis 1", "description": "Super opis, super przepis.", "categoryId": "1"};
+  function addRecipe() {
+    fetch('http://localhost:8080/api/recipes/', {
+      method: "POST", 
+      body: JSON.stringify(recipe),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer "+token,
+      },
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
+  function getRecipes() {
+    fetch('http://localhost:8080/api/recipes/', {
+      method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer "+token,
+        },
+    })
+    .then((response) => response.json())
+    .then((data) => {
+        setRecipes(data);
+      console.log(data);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    }
 
   function handleChangeUsername(e : any) {
     setUsername(e.target.value);
@@ -104,6 +142,19 @@ function App() {
         >
           Learn React
         </a>
+
+        <button onClick={addRecipe}>
+          Dodaj przepis
+        </button>
+        <button onClick={getRecipes}>
+          Pobiesz przepisy
+        </button>
+        <div>
+          <ul>
+            <li></li>
+
+          </ul>
+        </div>
       </header>
     </div>
   );
