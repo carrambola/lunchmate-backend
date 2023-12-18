@@ -34,6 +34,11 @@ public class Recipe {
     private String name;
     @NotNull
     private Date createdAt;
+
+    private Date prepareTime;
+    private Double avgRating;
+    private Long diffLevel;
+
     @NotNull
     @Column(length = 2000)
     private String description;
@@ -45,8 +50,8 @@ public class Recipe {
     @JoinColumn(name="user_id", nullable = false)
     private User user;
 
-     @OneToMany(mappedBy = "recipe")
-  private Set<Comment> comments = new HashSet<>();
+    @OneToMany(mappedBy = "recipe")
+    private Set<Comment> comments = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name="category_id", nullable = false)
@@ -60,7 +65,7 @@ public class Recipe {
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
-    private List<RecipeIngridient> ingridients = new ArrayList<>();
+    private List<RecipeIngredient> ingredients = new ArrayList<>();
 
     @ManyToMany
     private Set<User> likes = new HashSet<>();

@@ -21,7 +21,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Ingridient {
+public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -32,9 +32,9 @@ public class Ingridient {
     private Integer calories;
 
     @OneToMany(
-        mappedBy = "ingridient",
+        mappedBy = "ingredient",
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
-    private List<RecipeIngridient> recipes = new ArrayList<>();
+    private List<RecipeIngredient> recipes = new ArrayList<>();
 }

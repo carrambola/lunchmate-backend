@@ -14,16 +14,16 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class RecipeIngridientId implements Serializable {
+public class RecipeIngredientId implements Serializable {
     private Long recipeId;
-    private Long ingridientId;
+    private Long ingredientId;
     
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((recipeId == null) ? 0 : recipeId.hashCode());
-        result = prime * result + ((ingridientId == null) ? 0 : ingridientId.hashCode());
+        result = prime * result + ((ingredientId == null) ? 0 : ingredientId.hashCode());
         return result;
     }
     @Override
@@ -34,16 +34,16 @@ public class RecipeIngridientId implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        RecipeIngridientId other = (RecipeIngridientId) obj;
+        RecipeIngredientId other = (RecipeIngredientId) obj;
         if (recipeId == null) {
             if (other.recipeId != null)
                 return false;
         } else if (!recipeId.equals(other.recipeId))
             return false;
-        if (ingridientId == null) {
-            if (other.ingridientId != null)
+        if (ingredientId == null) {
+            if (other.ingredientId != null)
                 return false;
-        } else if (!ingridientId.equals(other.ingridientId))
+        } else if (!ingredientId.equals(other.ingredientId))
             return false;
         return true;
     }

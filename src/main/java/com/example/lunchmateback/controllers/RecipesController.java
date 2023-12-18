@@ -65,7 +65,7 @@ public class RecipesController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getRecipe(Long id) {
         Optional<Recipe> oRecipe = repository.findById(id);
-        if(!oRecipe.isPresent()) {
+        if(oRecipe.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -82,14 +82,14 @@ public class RecipesController {
         recipe.setName(dto.getName());
         recipe.setCreatedAt(new Date());
         Optional<Category> oCategory = categoryRepository.findById(dto.getCategoryId());
-        if(!oCategory.isPresent()) {
+        if(oCategory.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
 
         recipe.setCategory(oCategory.get());
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<User> oUser = userRepository.findById(userDetails.getId());
-        if(!oUser.isPresent()) { return ResponseEntity.badRequest().build(); }
+        if(oUser.isEmpty()) { return ResponseEntity.badRequest().build(); }
         recipe.setUser(oUser.get());
         
         recipe = repository.save(recipe);
