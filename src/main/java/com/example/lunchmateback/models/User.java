@@ -33,6 +33,8 @@ public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+  private Boolean locked = false;
+  private Boolean enable = false;
 
   @NotBlank
   @Size(max = 20)
