@@ -71,9 +71,6 @@ public class User {
   @OneToMany(mappedBy = "author")
   private Set<Comment> comments = new HashSet<>();
 
-  @ManyToMany
-  private Set<Recipe> likedRecipes = new HashSet<>();
-
   public User() {
   }
 
