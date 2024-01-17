@@ -30,7 +30,7 @@ import com.example.lunchmateback.repositories.UserRepository;
 import com.example.lunchmateback.services.UserDetailsImpl;
 
 @RestController
-@RequestMapping(value="/api/recipes")
+@RequestMapping(value = "/api/recipes")
 @CrossOrigin
 public class RecipesController {
 
@@ -48,9 +48,9 @@ public class RecipesController {
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> getRecipes() {
-        List<Recipe>  recipes = (List<Recipe>) repository.findAll(); //rzutuje iterable na liste bo inaczej mam edncode error
+        List<Recipe> recipes = (List<Recipe>) repository.findAll(); //rzutuje iterable na liste bo inaczej mam edncode error
         List<RecipeDto> recipeDtos = new ArrayList<>();
-        for (Recipe r : recipes){
+        for (Recipe r : recipes) {
             RecipeDto x = new RecipeDto();
             x.setCategoryId(r.getCategory().getId());
             x.setDescription(r.getDescription());
@@ -65,7 +65,7 @@ public class RecipesController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getRecipe(Long id) {
         Optional<Recipe> oRecipe = repository.findById(id);
-        if(!oRecipe.isPresent()) {
+        if (!oRecipe.isPresent()) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -82,16 +82,18 @@ public class RecipesController {
         recipe.setName(dto.getName());
         recipe.setCreatedAt(new Date());
         Optional<Category> oCategory = categoryRepository.findById(dto.getCategoryId());
-        if(!oCategory.isPresent()) {
+        if (!oCategory.isPresent()) {
             return ResponseEntity.badRequest().build();
         }
 
         recipe.setCategory(oCategory.get());
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<User> oUser = userRepository.findById(userDetails.getId());
-        if(!oUser.isPresent()) { return ResponseEntity.badRequest().build(); }
+        if (!oUser.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
         recipe.setUser(oUser.get());
-        
+
         recipe = repository.save(recipe);
 
         RecipeDto rDto = new RecipeDto();
@@ -99,12 +101,12 @@ public class RecipesController {
         rDto.setId(recipe.getId());
         rDto.setUserId(recipe.getUser().getId());
 
-        if(recipe != null && recipe.getId() != null)  {
+        if (recipe != null && recipe.getId() != null) {
             return ResponseEntity.ok().body(rDto);
-        } 
+        }
 
         return ResponseEntity.status(405).build();
 
     }
-    
+
 }
