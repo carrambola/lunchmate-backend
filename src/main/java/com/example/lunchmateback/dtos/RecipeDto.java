@@ -25,8 +25,8 @@ public class RecipeDto {
 
     private Long likesCount;
 
-    private String photoUrl;
-    private Integer amountTimeToPrepare;
+    private String image;
+    private Integer time;
 
     @NotNull
     private String difficulty;

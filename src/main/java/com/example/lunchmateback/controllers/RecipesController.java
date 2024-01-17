@@ -15,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,6 +38,8 @@ import com.example.lunchmateback.repositories.UserRepository;
 import com.example.lunchmateback.services.RecipeService;
 import com.example.lunchmateback.services.UserDetailsImpl;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 @RestController
@@ -61,6 +64,21 @@ public class RecipesController {
         }
         return ResponseEntity.ok().body(dto);
     }
+    
+    @GetMapping(value="/mostLiked", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getMostLikedRecipes() {
+        return ResponseEntity.ok().body(recipeService.getMostLikedRecipes());
+    }
+
+    @GetMapping(value="/mostRecent", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getMostRecentRecipes() {
+        return ResponseEntity.ok().body(recipeService.getMostRecentRecipes());
+    }
+
+    @GetMapping(value="/mostEasy", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getMostEasyRecipes() {
+        return ResponseEntity.ok().body(recipeService.getMostEasyRecipes());
+    }
 
     @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> saveRecipe(@RequestBody RecipeDto dto) {
@@ -74,6 +92,21 @@ public class RecipesController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateRecipe(@PathVariable Long id, @RequestBody RecipeDto entity) {
+        RecipeDto dto = recipeService.update(entity, id);
+        if(dto == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @DeleteMapping(value="/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> deleteRecipe(@PathVariable Long id) {
+        Boolean b = recipeService.delete(id);
+        return ResponseEntity.ok().body(b);
+    }
+
     @GetMapping(value = "/addLike/{recipeId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addLikeToRecipe(@PathParam(value = "recipeId") Long recipeId) {
         Boolean resp = recipeService.addLikeToRecipe(recipeId);
@@ -84,5 +117,7 @@ public class RecipesController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+
     
 }

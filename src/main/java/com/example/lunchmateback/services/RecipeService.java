@@ -12,4 +12,14 @@ public interface RecipeService {
     RecipeDto saveRecipe(RecipeDto dto);
 
     Boolean addLikeToRecipe(Long recipeId);
+
+    List<RecipeDto> getMostLikedRecipes();
+
+    RecipeDto update(RecipeDto entity, Long id);
+
+    Boolean delete(Long id);
+
+    Object getMostRecentRecipes();
+
+    Object getMostEasyRecipes();
 }

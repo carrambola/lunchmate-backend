@@ -3,6 +3,7 @@ package com.example.lunchmateback.models;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,6 +25,8 @@ public class Category {
     private Long id;
     @NotBlank
     private String name;
+    @Column(length = 3000)
+    private String image;
 
     @OneToMany(mappedBy = "category")
     private Set<Recipe> recipes = new HashSet<>();
