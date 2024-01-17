@@ -24,5 +24,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         return UserDetailsImpl.build(user);
     }
-    
+    public int enableAppUser(String email) {
+        return userRepository.enableAppUser(email);
+    }
 }

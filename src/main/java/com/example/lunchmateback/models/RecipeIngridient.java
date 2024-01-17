@@ -36,7 +36,7 @@ public class RecipeIngridient {
     private Integer amount;
 
     @NotBlank
-    private String scale;
+    private String unit;
 
     public RecipeIngridient(Recipe recipe, Ingridient ingridient) {
         this.recipe = recipe;
