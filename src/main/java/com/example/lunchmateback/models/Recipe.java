@@ -62,7 +62,14 @@ public class Recipe {
     )
     private List<RecipeIngridient> ingridients = new ArrayList<>();
 
-    @ManyToMany
-    private Set<User> likes = new HashSet<>();
+    private Long likes;
 
+    @Column(length = 3000)
+    private String photoUrl;
+
+    @NotNull
+    private Integer amountTimeToPrepare;
+
+    @NotNull
+    private String difficulty;
 }
