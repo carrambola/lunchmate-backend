@@ -27,9 +27,6 @@ public class Ingridient {
     private Long id;
     @NotBlank
     private String name;
-    @NotNull
-    @Min(value = 1)
-    private Integer calories;
 
     @OneToMany(
         mappedBy = "ingridient",

@@ -9,6 +9,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -58,11 +59,19 @@ public class Recipe {
     @OneToMany(
         mappedBy = "recipe",
         cascade = CascadeType.ALL,
-        orphanRemoval = true
+        orphanRemoval = true,
+        fetch = FetchType.EAGER
     )
     private List<RecipeIngridient> ingridients = new ArrayList<>();
 
-    @ManyToMany
-    private Set<User> likes = new HashSet<>();
+    private Long likes;
 
+    @Column(length = 3000)
+    private String image;
+
+    @NotNull
+    private Integer time;
+
+    @NotNull
+    private Integer difficulty;
 }

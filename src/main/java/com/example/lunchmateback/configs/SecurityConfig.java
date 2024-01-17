@@ -13,6 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.example.lunchmateback.jwt.AuthEntryPointJwt;
 import com.example.lunchmateback.jwt.AuthTokenFilter;
@@ -74,7 +77,16 @@ public class SecurityConfig {
 
         return http.build();
     }
-
+    //  @Bean
+    // public CorsFilter corsFilter() {
+    //     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    //     CorsConfiguration config = new CorsConfiguration();
+    //     config.addAllowedOrigin("*"); // Ustaw dozwolone domeny
+    //     config.addAllowedMethod("*"); // Ustaw dozwolone metody HTTP
+    //     config.addAllowedHeader("*"); // Ustaw dozwolone nagłówki
+    //     source.registerCorsConfiguration("/**", config);
+    //     return new CorsFilter(source);
+    // }
     
 
     // @Bean
