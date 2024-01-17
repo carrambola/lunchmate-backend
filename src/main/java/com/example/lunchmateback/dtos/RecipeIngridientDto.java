@@ -10,6 +10,7 @@ import lombok.Setter;
 public class RecipeIngridientDto {
     private Long ingridientId;
     private Long recipeId;
+    private String name;
     private Integer amount;
-    private String scale;
+    private String unit;
 }

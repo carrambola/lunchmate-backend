@@ -10,4 +10,7 @@ import com.example.lunchmateback.models.Recipe;
 @Repository
 public interface RecipesRepository extends CrudRepository<Recipe, Long> {
     // List<Recipe> findOrderByName();
+    List<Recipe> findTop10ByOrderByLikesDesc();
+    List<Recipe> findTop10ByOrderByCreatedAtDesc();
+    List<Recipe> findTop10ByOrderByDifficultyAsc();
 }
