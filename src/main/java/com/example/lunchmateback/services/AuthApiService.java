@@ -57,21 +57,21 @@ public class AuthApiService {
 
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
-                .orElseThrow(() -> new IllegalStateException("token not found!"));
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono tokenu."));
         if (confirmationToken.getConfirmedAt() != null) {
-            return ResponseEntity.badRequest().body("email already verified!");
+            return ResponseEntity.badRequest().body("Konto już zostało zatwierdzone.");
         }
         if (confirmationToken.getExpiresAt().isBefore(LocalDateTime.now())) {
-            return ResponseEntity.badRequest().body("token has already expired!");
+            return ResponseEntity.badRequest().body("Token już wygasł.");
         }
         confirmationTokenService.setConfirmedAt(token);
         userDetailsService.enableAppUser(confirmationToken.getUser().getEmail());
-        return ResponseEntity.ok(new MessageResponse("User successfully confirmed"));
+        return ResponseEntity.ok(new MessageResponse("Konto pomyślnie zatwierdzone"));
     }
 
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        if (userRepository.findByUsername(loginRequest.getUsername()).isPresent()){
-            if(userRepository.findByUsername(loginRequest.getUsername()).get().getEnable()){
+        if (userRepository.findByUsername(loginRequest.getUsername()).isPresent()) {
+            if (userRepository.findByUsername(loginRequest.getUsername()).get().getEnable()) {
                 Authentication authentication = authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
@@ -88,15 +88,15 @@ public class AuthApiService {
                         userDetails.getUsername(),
                         userDetails.getEmail(),
                         roles));
-            }else{
+            } else {
                 return ResponseEntity
                         .badRequest()
-                        .body(new MessageResponse("Account's not confirmed. Please check your email for the verification letter!"));
+                        .body(new MessageResponse("Konto nie potwierdzone. Sprawdź skrzynkę email po wiadomość weryfikacyjną."));
             }
-        }else{
+        } else {
             return ResponseEntity
                     .badRequest()
-                    .body("User not found!");
+                    .body(new MessageResponse("Nie znaleziono użytkownika."));
         }
 
     }
@@ -105,13 +105,13 @@ public class AuthApiService {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Error: Username is already taken!"));
+                    .body(new MessageResponse("Nazwa użytkownika jest już zajęta."));
         }
 
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Error: Email is already in use!"));
+                    .body(new MessageResponse("Adres email jest już zajęty."));
         }
 
         // Create new user's account
@@ -128,7 +128,7 @@ public class AuthApiService {
 
 
         Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                .orElseThrow(() -> new RuntimeException("Nie znaleziono roli."));
         roles.add(userRole);
 
 
@@ -146,7 +146,7 @@ public class AuthApiService {
 
     private String buildEmail(String name, String link) {
         System.out.println(link);
-        String  content = "Dear [[name]],<br>"
+        String content = "Dear [[name]],<br>"
                 + "Please click the link below to verify your registration:<br>"
                 + "<h3><a href=\"[[URL]]\" target=\"_blank\">VERIFY</a></h3>"
                 + "Thank you,<br>"

@@ -69,6 +69,10 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth.antMatchers("/api/auth/**").permitAll()
                         .antMatchers("/api/test/**").permitAll()
+                        .antMatchers("/api/recipes/**").permitAll()
+                        .antMatchers("/api/comments/**").permitAll()
+                        .antMatchers("/api/categories/**").permitAll()
+                        .antMatchers("/api/ingridients/**").permitAll()
                         .anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider());
