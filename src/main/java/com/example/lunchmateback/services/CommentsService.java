@@ -29,18 +29,18 @@ public class CommentsService {
     public ResponseEntity<?> saveComment(@RequestBody CommentRequest request) {
         Comment comment = new Comment();
         if (!userRepository.findById(request.getAuthor()).isPresent()) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Provided user doesn't exist"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Podany użytkownik nie istnieje."));
         }
         comment.setAuthor(userRepository.findById(request.getAuthor()).get());
         comment.setAuthor(userRepository.findById(request.getAuthor()).get());
         if (!recipesRepository.findById(request.getRecipe()).isPresent()) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Provided recipe doesn't exist"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Podany przepis nie istnieje"));
         }
         comment.setRecipe(recipesRepository.findById(request.getRecipe()).get());
         comment.setDescription(request.getDescription());
         comment.setTitle(request.getTitle());
         commentRepository.save(comment);
-        return ResponseEntity.ok().body(new MessageResponse("Comment " + comment.getId() + "created succesfully"));
+        return ResponseEntity.ok().body(new MessageResponse("Komentarz " + comment.getId() + "został stworzony"));
     }
 
     public Optional<Comment> getComment(Long recipeId) {
@@ -67,7 +67,7 @@ public class CommentsService {
 
     public ResponseEntity<?> deleteComment(Long commentId) {
         commentRepository.deleteComment(commentId);
-        return ResponseEntity.ok().body("Comment deleted successfully");
+        return ResponseEntity.ok().body("Usuwanie komenatrza zakończone sukcesem.");
     }
 
     public ResponseEntity<?> updateComment(Long id, String newTitle, String newDescription) {
@@ -76,7 +76,7 @@ public class CommentsService {
             commentRepository.updateDescription(id, newDescription);
             return ResponseEntity.ok().body(commentRepository.findById(id).get().toString());
         } else {
-            return ResponseEntity.badRequest().body(new MessageResponse("Comment not found!"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Komenatrz nie znaleziony."));
         }
     }
 }
