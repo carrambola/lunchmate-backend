@@ -23,7 +23,7 @@ public class RecipeDto {
     private List<CommentDto> comments;
     private List<RecipeIngridientDto> ingridients = new ArrayList<>();
 
-    private Long likesCount;
+    private Long likes;
 
     private String image;
     private Integer time;
