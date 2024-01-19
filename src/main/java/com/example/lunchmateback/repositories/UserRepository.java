@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username); // select * from users where username='%username' limit 1;
 
+
     Boolean existsByUsername(String username); // select count(*) from users where usernmae=...
 
     Boolean existsByEmail(String email); //
