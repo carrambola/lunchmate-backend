@@ -138,7 +138,7 @@ public class AuthApiService {
         ConfirmationToken confirmationToken = new ConfirmationToken(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(15), user);
         confirmationTokenService.saveConfirmationToken(confirmationToken);
 
-        String link = "http://localhost:8080/api/auth/confirm?token=" + token;
+        String link = "https://lunchmate-backend-production.up.railway.app/api/auth/confirm?token=" + token;
 
         emailSender.send(signUpRequest.getEmail(), buildEmail(signUpRequest.getName(), link));
         return ResponseEntity.ok(new MessageResponse(token));
