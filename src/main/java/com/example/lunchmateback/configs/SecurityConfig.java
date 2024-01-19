@@ -73,6 +73,7 @@ public class SecurityConfig {
                         .antMatchers("/api/comments/**").permitAll()
                         .antMatchers("/api/categories/**").permitAll()
                         .antMatchers("/api/ingridients/**").permitAll()
+                        .antMatchers("/api/user/**").permitAll()
                         .anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider());

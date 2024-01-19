@@ -18,6 +18,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -65,12 +66,15 @@ public class User {
   @JoinTable(  name = "user_roles", 
         joinColumns = @JoinColumn(name = "user_id"), 
         inverseJoinColumns = @JoinColumn(name = "role_id"))
+  @JsonIgnore
   private Set<Role> roles = new HashSet<>();
 
   @OneToMany(mappedBy = "user")
+  @JsonIgnore
   private Set<Recipe> recipes = new HashSet<>();
 
   @OneToMany(mappedBy = "author")
+  @JsonIgnore
   private Set<Comment> comments = new HashSet<>();
 
   public User() {

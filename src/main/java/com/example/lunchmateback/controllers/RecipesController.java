@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import javax.websocket.server.PathParam;
 
+import com.example.lunchmateback.dtos.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties.Authentication;
 import org.springframework.http.MediaType;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -88,7 +90,7 @@ public class RecipesController {
         if(rDto != null)  {
             return ResponseEntity.ok().body(rDto);
         } else {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(new MessageResponse("Nie udalo sie dodac przepisu"));
         }
     }
 
