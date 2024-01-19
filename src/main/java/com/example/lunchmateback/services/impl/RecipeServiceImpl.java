@@ -46,24 +46,24 @@ public class RecipeServiceImpl implements RecipeService {
     @Transactional
     public RecipeDto getRecipe(Long id) {
         Optional<Recipe> oRecipe = recipesRepository.findById(id);
-        if(!oRecipe.isPresent()) {
+        if (!oRecipe.isPresent()) {
             return null;
         }
 
         RecipeDto x = new RecipeDto();
-            x.setCategoryId(oRecipe.get().getCategory().getId());
-            x.setDescription(oRecipe.get().getDescription());
-            x.setId(oRecipe.get().getId());
-            x.setName(oRecipe.get().getName());
-            x.setUserId(oRecipe.get().getUser().getId());
-            x.setTime(oRecipe.get().getTime());
-            x.setImage(oRecipe.get().getImage());
-            x.setDifficulty(translateDifficulity(oRecipe.get().getDifficulty()));
+        x.setCategoryId(oRecipe.get().getCategory().getId());
+        x.setDescription(oRecipe.get().getDescription());
+        x.setId(oRecipe.get().getId());
+        x.setName(oRecipe.get().getName());
+        x.setUserId(oRecipe.get().getUser().getId());
+        x.setTime(oRecipe.get().getTime());
+        x.setImage(oRecipe.get().getImage());
+        x.setDifficulty(translateDifficulity(oRecipe.get().getDifficulty()));
 
         //Recipe recipe = oRecipe.get();
         //Hibernate.initialize(recipe.getIngridients());
 
-        for(RecipeIngridient ri : recipeIngridientRepository.findByRecipe(oRecipe.get())) {
+        for (RecipeIngridient ri : recipeIngridientRepository.findByRecipe(oRecipe.get())) {
             RecipeIngridientDto riDto = new RecipeIngridientDto();
             riDto.setAmount(ri.getAmount());
             riDto.setIngridientId(ri.getId().getIngridientId());
@@ -76,7 +76,7 @@ public class RecipeServiceImpl implements RecipeService {
 
         Hibernate.initialize(oRecipe.get().getLikes());
 
-        x.setLikesCount(oRecipe.get().getLikes());
+        x.setLikes(oRecipe.get().getLikes());
 
         return x;
     }
@@ -84,9 +84,9 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     // @Transactional
     public List<RecipeDto> getRecipes() {
-        List<Recipe>  recipes = (List<Recipe>) recipesRepository.findAll(); //rzutuje iterable na liste bo inaczej mam edncode error
+        List<Recipe> recipes = (List<Recipe>) recipesRepository.findAll(); //rzutuje iterable na liste bo inaczej mam edncode error
         List<RecipeDto> recipeDtos = new ArrayList<>();
-        for (Recipe r : recipes){
+        for (Recipe r : recipes) {
             // 
 
             RecipeDto x = new RecipeDto();
@@ -98,9 +98,8 @@ public class RecipeServiceImpl implements RecipeService {
             x.setTime(r.getTime());
             x.setImage(r.getImage());
             x.setDifficulty(translateDifficulity(r.getDifficulty()));
-            x.setLikesCount(r.getLikes());
+            x.setLikes(r.getLikes());
 
-            
 
             recipeDtos.add(x);
         }
@@ -115,10 +114,13 @@ public class RecipeServiceImpl implements RecipeService {
         recipe.setDescription(dto.getDescription());
         recipe.setName(dto.getName());
         recipe.setCreatedAt(new Date());
-        
+
+        recipe.setLikes(0L);
+
+
         // kategoria
         Optional<Category> oCategory = categoryRepository.findById(dto.getCategoryId());
-        if(!oCategory.isPresent()) {
+        if (!oCategory.isPresent()) {
             return null;
         }
 
@@ -127,12 +129,12 @@ public class RecipeServiceImpl implements RecipeService {
         // author - uzyskanie uzytkownika
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<User> oUser = userRepository.findById(userDetails.getId());
-        if(!oUser.isPresent()) { 
-            return null; 
+        if (!oUser.isPresent()) {
+            return null;
         }
         recipe.setUser(oUser.get());
-        
-       
+
+
         // recipe.setIngridients(ingridients);
 
         recipe.setImage(dto.getImage());
@@ -145,9 +147,9 @@ public class RecipeServiceImpl implements RecipeService {
 
         // dodaje skladniki
         // List<RecipeIngridient> ingridients = new ArrayList<>();
-        for(RecipeIngridientDto riDto : dto.getIngridients()) {
+        for (RecipeIngridientDto riDto : dto.getIngridients()) {
             Optional<Ingridient> oIngridient = ingridientRepository.findById(riDto.getIngridientId());
-            if(oIngridient.isPresent()) {
+            if (oIngridient.isPresent()) {
                 RecipeIngridient ri = new RecipeIngridient();
                 RecipeIngridientId id = new RecipeIngridientId(recipe.getId(), oIngridient.get().getId());
 
@@ -170,7 +172,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public Boolean addLikeToRecipe(Long recipeId) {
         Optional<Recipe> oReOptional = recipesRepository.findById(recipeId);
-        if(!oReOptional.isPresent()) {
+        if (!oReOptional.isPresent()) {
             return false;
         }
 
@@ -179,14 +181,14 @@ public class RecipeServiceImpl implements RecipeService {
 
         recipesRepository.save(r);
         return true;
-        
+
     }
 
     @Override
     public List<RecipeDto> getMostLikedRecipes() {
-        List<Recipe>  recipes = (List<Recipe>) recipesRepository.findTop10ByOrderByLikesDesc(); //rzutuje iterable na liste bo inaczej mam edncode error
+        List<Recipe> recipes = (List<Recipe>) recipesRepository.findTop10ByOrderByLikesDesc(); //rzutuje iterable na liste bo inaczej mam edncode error
         List<RecipeDto> recipeDtos = new ArrayList<>();
-        for (Recipe r : recipes){
+        for (Recipe r : recipes) {
             RecipeDto x = new RecipeDto();
             x.setCategoryId(r.getCategory().getId());
             x.setDescription(r.getDescription());
@@ -196,7 +198,7 @@ public class RecipeServiceImpl implements RecipeService {
             x.setTime(r.getTime());
             x.setImage(r.getImage());
             x.setDifficulty(translateDifficulity(r.getDifficulty()));
-            x.setLikesCount(r.getLikes());
+            x.setLikes(r.getLikes());
             recipeDtos.add(x);
         }
 
@@ -207,7 +209,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Transactional
     public RecipeDto update(RecipeDto dto, Long id) {
         Optional<Recipe> oRecipe = recipesRepository.findById(id);
-        if(!oRecipe.isPresent()) {
+        if (!oRecipe.isPresent()) {
             return null;
         }
 
@@ -215,10 +217,10 @@ public class RecipeServiceImpl implements RecipeService {
         recipe.setDescription(dto.getDescription());
         recipe.setName(dto.getName());
         recipe.setCreatedAt(new Date());
-        
+
         // kategoria
         Optional<Category> oCategory = categoryRepository.findById(dto.getCategoryId());
-        if(!oCategory.isPresent()) {
+        if (!oCategory.isPresent()) {
             return null;
         }
 
@@ -227,12 +229,12 @@ public class RecipeServiceImpl implements RecipeService {
         // author - uzyskanie uzytkownika
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<User> oUser = userRepository.findById(userDetails.getId());
-        if(!oUser.isPresent()) { 
-            return null; 
+        if (!oUser.isPresent()) {
+            return null;
         }
         recipe.setUser(oUser.get());
-        
-       
+
+
         // recipe.setIngridients(ingridients);
 
         recipe.setImage(dto.getImage());
@@ -242,16 +244,16 @@ public class RecipeServiceImpl implements RecipeService {
         recipe.setDifficulty(translateDifficulity(dto.getDifficulty()));
         recipe = recipesRepository.save(recipe);
 
-        
+
         // teraz zarzadzam składnikami - musze ponownie pobrac obiekt z bazy
         oRecipe = recipesRepository.findById(recipe.getId());
         recipe = oRecipe.get();
         recipeIngridientRepository.deleteByRecipe(recipe);
 
         // dodaje skladniki
-        for(RecipeIngridientDto riDto : dto.getIngridients()) {
+        for (RecipeIngridientDto riDto : dto.getIngridients()) {
             Optional<Ingridient> oIngridient = ingridientRepository.findById(riDto.getIngridientId());
-            if(oIngridient.isPresent()) {
+            if (oIngridient.isPresent()) {
                 RecipeIngridient ri = new RecipeIngridient();
                 RecipeIngridientId riId = new RecipeIngridientId(recipe.getId(), oIngridient.get().getId());
 
@@ -272,7 +274,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public Boolean delete(Long id) {
         Optional<Recipe> orecipe = recipesRepository.findById(id);
-        if(!orecipe.isPresent()) {
+        if (!orecipe.isPresent()) {
             return false;
         }
         recipesRepository.deleteById(id);
@@ -281,9 +283,9 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Object getMostRecentRecipes() {
-        List<Recipe>  recipes = (List<Recipe>) recipesRepository.findTop10ByOrderByCreatedAtDesc(); //rzutuje iterable na liste bo inaczej mam edncode error
+        List<Recipe> recipes = (List<Recipe>) recipesRepository.findTop10ByOrderByCreatedAtDesc(); //rzutuje iterable na liste bo inaczej mam edncode error
         List<RecipeDto> recipeDtos = new ArrayList<>();
-        for (Recipe r : recipes){
+        for (Recipe r : recipes) {
             RecipeDto x = new RecipeDto();
             x.setCategoryId(r.getCategory().getId());
             x.setDescription(r.getDescription());
@@ -293,8 +295,8 @@ public class RecipeServiceImpl implements RecipeService {
             x.setTime(r.getTime());
             x.setImage(r.getImage());
             x.setDifficulty(translateDifficulity(r.getDifficulty()));
-            
-            x.setLikesCount(r.getLikes());
+
+            x.setLikes(r.getLikes());
             recipeDtos.add(x);
         }
 
@@ -303,9 +305,9 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Object getMostEasyRecipes() {
-        List<Recipe>  recipes = (List<Recipe>) recipesRepository.findTop10ByOrderByDifficultyAsc(); //rzutuje iterable na liste bo inaczej mam edncode error
+        List<Recipe> recipes = (List<Recipe>) recipesRepository.findTop10ByOrderByDifficultyAsc(); //rzutuje iterable na liste bo inaczej mam edncode error
         List<RecipeDto> recipeDtos = new ArrayList<>();
-        for (Recipe r : recipes){
+        for (Recipe r : recipes) {
             RecipeDto x = new RecipeDto();
             x.setCategoryId(r.getCategory().getId());
             x.setDescription(r.getDescription());
@@ -315,8 +317,8 @@ public class RecipeServiceImpl implements RecipeService {
             x.setTime(r.getTime());
             x.setImage(r.getImage());
             x.setDifficulty(translateDifficulity(r.getDifficulty()));
-            
-            x.setLikesCount(r.getLikes());
+
+            x.setLikes(r.getLikes());
             recipeDtos.add(x);
         }
 
@@ -326,24 +328,22 @@ public class RecipeServiceImpl implements RecipeService {
     private String translateDifficulity(Integer difficulty) {
         switch (difficulty) {
             case 1:
-            return "easy";
+                return "easy";
             case 2:
-            return "medium";
+                return "medium";
             case 3:
-            return "hard";
+                return "hard";
             default:
-            return "stara nie podchodź";
+                return "stara nie podchodź";
         }
     }
 
     private Integer translateDifficulity(String difficulty) {
-        if(difficulty.equals("easy")) return 1;
-        if(difficulty.equals("medium")  ) return 2;
-        if(difficulty.equals("hard")) return 3;
+        if (difficulty.equals("easy")) return 1;
+        if (difficulty.equals("medium")) return 2;
+        if (difficulty.equals("hard")) return 3;
         return 0;
     }
 
 
-
-    
 }
